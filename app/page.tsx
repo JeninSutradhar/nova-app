@@ -1,65 +1,95 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Navbar } from '@/components/Navbar';
+
+export default function HomePage() {
+  const router = useRouter();
+
+  const handleStart = () => {
+    const newSessionId = crypto.randomUUID();
+    router.push(`/quiz/pre?session=${newSessionId}`);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen">
+      <Navbar />
+
+      {/* Hero */}
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="ui-card-solid p-10"
+        >
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div>
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">Build Resilience. Choose Your Path.</h1>
+              <p className="text-lg text-[color:var(--muted)] mb-6 max-w-prose">
+                Navigate realistic scenarios, practice refusal skills and protective strategies, and see your impact—safely, privately, and locally.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button onClick={handleStart} className="ui-btn ui-btn-primary">Start Your Journey</button>
+                <Link href="#features" className="ui-btn ui-btn-secondary">Learn More</Link>
+              </div>
+            </div>
+            <div className="ui-card p-8">
+              <div className="text-sm font-semibold mb-3">Highlights</div>
+              <div className="grid sm:grid-cols-3 gap-4">
+                <div className="ui-card-solid p-5 text-center">
+                  <div className="text-3xl font-black">10+</div>
+                  <div className="text-sm text-[color:var(--muted)]">Scenarios</div>
+                </div>
+                <div className="ui-card-solid p-5 text-center">
+                  <div className="text-3xl font-black">40+</div>
+                  <div className="text-sm text-[color:var(--muted)]">Choices</div>
+                </div>
+                <div className="ui-card-solid p-5 text-center">
+                  <div className="text-3xl font-black">9</div>
+                  <div className="text-sm text-[color:var(--muted)]">Metrics</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Features */}
+      <section id="features" className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="ui-card-solid p-6">
+            <div className="text-sm font-semibold text-[color:var(--muted)] mb-2">Gameplay</div>
+            <h3 className="text-xl font-bold mb-1">Choice-Based Scenarios</h3>
+            <p className="text-[color:var(--muted)]">Explore realistic situations and shape outcomes with meaningful decisions.</p>
+          </div>
+          <div className="ui-card-solid p-6">
+            <div className="text-sm font-semibold text-[color:var(--muted)] mb-2">Skills</div>
+            <h3 className="text-xl font-bold mb-1">Build Resilience</h3>
+            <p className="text-[color:var(--muted)]">Practice protective strategies, refusal skills, and help-seeking.</p>
+          </div>
+          <div className="ui-card-solid p-6">
+            <div className="text-sm font-semibold text-[color:var(--muted)] mb-2">Impact</div>
+            <h3 className="text-xl font-bold mb-1">See Your Progress</h3>
+            <p className="text-[color:var(--muted)]">Track your decisions and their effects on wellbeing and relationships.</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-6xl px-6 pb-24">
+        <div className="ui-card p-10 text-center">
+          <h2 className="text-3xl font-extrabold mb-2">Ready to Begin?</h2>
+          <p className="text-[color:var(--muted)] mb-6 max-w-2xl mx-auto">Start your journey of self-discovery and empowerment. Every choice matters.</p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <button onClick={handleStart} className="ui-btn ui-btn-primary">Start Playing Now</button>
+            <Link href="/about" className="ui-btn ui-btn-secondary">About NOVA</Link>
+            <Link href="/resources" className="ui-btn ui-btn-secondary">Resources</Link>
+            <Link href="/dashboard" className="ui-btn ui-btn-secondary">For Teachers</Link>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

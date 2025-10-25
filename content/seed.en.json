@@ -1,0 +1,387 @@
+{
+  "id": "seed-en",
+  "version": "1.0.0",
+  "locale": "en",
+  "ageBands": ["13-14", "15-16", "17-18"],
+  "safeForDemo": true,
+  "events": [
+    {
+      "id": "peer-offer-party",
+      "title": "A Party Offer",
+      "narrative": "At a small get-together, a classmate offers you something to try. Friends are watching.",
+      "tags": ["peer_pressure", "party"],
+      "choices": [
+        {
+          "id": "try-once",
+          "label": "Try it once",
+          "hint": "Curious, but risky.",
+          "effects": {
+            "metricDeltas": {"Health": -8, "Stress": 4, "Reputation": 2},
+            "addTags": ["tried_substance"],
+            "achievement": "Tempted"
+          }
+        },
+        {
+          "id": "walk-away",
+          "label": "Walk away",
+          "hint": "Protect yourself.",
+          "effects": {
+            "metricDeltas": {"Health": 4, "RiskAwareness": 6, "Reputation": -1},
+            "achievement": "Strong Boundaries"
+          }
+        },
+        {
+          "id": "offer-alt",
+          "label": "Suggest a group game instead",
+          "hint": "Redirect the moment.",
+          "effects": {
+            "metricDeltas": {"Relationships": 5, "SupportNetwork": 5, "Stress": -3},
+            "addTags": ["protective_action"],
+            "achievement": "Positive Influence"
+          }
+        },
+        {
+          "id": "seek-help",
+          "label": "Text a trusted friend",
+          "hint": "Get backup.",
+          "effects": {
+            "metricDeltas": {"SupportNetwork": 8, "Stress": -4},
+            "addTags": ["sought_help"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "exam-stress-night",
+      "title": "Exam Stress Night",
+      "narrative": "Exams are close and stress is high. You get a DM suggesting a 'focus pill'.",
+      "tags": ["exam_stress", "dm"],
+      "triggers": {"metricGte": {"Stress": 55}},
+      "choices": [
+        {
+          "id": "take-pill",
+          "label": "Take the pill",
+          "effects": {
+            "metricDeltas": {"Academics": 2, "Health": -10, "Stress": 6},
+            "addTags": ["used_stimulant"]
+          }
+        },
+        {
+          "id": "breathing-break",
+          "label": "10-min breathing + water",
+          "effects": {
+            "metricDeltas": {"Stress": -10, "RiskAwareness": 5}
+          }
+        },
+        {
+          "id": "plan-schedule",
+          "label": "Plan a simple study block",
+          "effects": {
+            "metricDeltas": {"Academics": 6, "Stress": -6},
+            "addTags": ["coping_skill"]
+          }
+        },
+        {
+          "id": "call-cousin",
+          "label": "Call older cousin for advice",
+          "effects": {
+            "metricDeltas": {"SupportNetwork": 6, "Stress": -5}
+          }
+        }
+      ]
+    },
+    {
+      "id": "family-tensions",
+      "title": "Family Tensions",
+      "narrative": "Tensions at home are high. An older friend offers you a way to 'escape' temporarily.",
+      "tags": ["family_stress", "offered_escape"],
+      "sensitive": true,
+      "choices": [
+        {
+          "id": "accept-offer",
+          "label": "Accept their offer",
+          "hint": "Quick relief, but at what cost?",
+          "effects": {
+            "metricDeltas": {"Stress": -5, "Health": -12, "SupportNetwork": -5},
+            "addTags": ["used_escape"]
+          }
+        },
+        {
+          "id": "talk-parent",
+          "label": "Have a calm talk with parent",
+          "hint": "Difficult but healthy.",
+          "effects": {
+            "metricDeltas": {"Relationships": 8, "MentalWellbeing": 7, "SupportNetwork": 6}
+          }
+        },
+        {
+          "id": "find-friend",
+          "label": "Call a close friend",
+          "hint": "Lean on your support.",
+          "effects": {
+            "metricDeltas": {"SupportNetwork": 8, "Stress": -6}
+          }
+        },
+        {
+          "id": "journal-exercise",
+          "label": "Journal and take a walk",
+          "hint": "Self-care moment.",
+          "effects": {
+            "metricDeltas": {"MentalWellbeing": 7, "Health": 4, "Stress": -5}
+          }
+        }
+      ]
+    },
+    {
+      "id": "social-media-pressure",
+      "title": "Social Media Pressure",
+      "narrative": "You see content glamorizing substance use. A group chat is planning to try something 'for fun' this weekend.",
+      "tags": ["peer_pressure", "online", "planning"],
+      "choices": [
+        {
+          "id": "join-group",
+          "label": "Agree to join them",
+          "hint": "FOMO is strong.",
+          "effects": {
+            "metricDeltas": {"Reputation": 4, "RiskAwareness": -8, "Health": -6}
+          }
+        },
+        {
+          "id": "voice-concern",
+          "label": "Voice your concerns",
+          "hint": "Be the voice of reason.",
+          "effects": {
+            "metricDeltas": {"RiskAwareness": 10, "Relationships": -2, "Reputation": -1}
+          }
+        },
+        {
+          "id": "suggest-alt",
+          "label": "Suggest an alternative activity",
+          "hint": "Keep the group safe.",
+          "effects": {
+            "metricDeltas": {"Relationships": 5, "SupportNetwork": 6, "RiskAwareness": 8}
+          }
+        },
+        {
+          "id": "distance-self",
+          "label": "Make other plans",
+          "hint": "Protect your boundaries.",
+          "effects": {
+            "metricDeltas": {"Health": 5, "RiskAwareness": 6, "Reputation": -3}
+          }
+        }
+      ]
+    },
+    {
+      "id": "celebration-moment",
+      "title": "After the Big Win",
+      "narrative": "Your team just won the championship! Everyone is celebrating. Someone pulls out alcohol and offers you some.",
+      "tags": ["celebration", "group_dynamic", "success"],
+      "choices": [
+        {
+          "id": "join-celebration",
+          "label": "Join the celebration",
+          "hint": "Special occasion, right?",
+          "effects": {
+            "metricDeltas": {"Reputation": 5, "Relationships": 4, "Health": -8}
+          }
+        },
+        {
+          "id": "toast-soda",
+          "label": "Toast with soda",
+          "hint": "Celebrate without risk.",
+          "effects": {
+            "metricDeltas": {"Relationships": 6, "Health": 2, "Reputation": 1}
+          }
+        },
+        {
+          "id": "focus-food",
+          "label": "Grab food with the team",
+          "hint": "Share the moment differently.",
+          "effects": {
+            "metricDeltas": {"Relationships": 8, "Health": 4, "MentalWellbeing": 3}
+          }
+        },
+        {
+          "id": "call-home",
+          "label": "Call family to share the news",
+          "hint": "Share with those who matter.",
+          "effects": {
+            "metricDeltas": {"Relationships": 7, "SupportNetwork": 6, "MentalWellbeing": 5}
+          }
+        }
+      ]
+    },
+    {
+      "id": "study-session-offer",
+      "title": "Study Session Offer",
+      "narrative": "A classmate offers you a 'smart drug' before a major test, saying it helped them get high scores.",
+      "tags": ["academic_pressure", "offered_substance"],
+      "triggers": {"metricGte": {"Academics": 40}},
+      "choices": [
+        {
+          "id": "take-drug",
+          "label": "Take the substance",
+          "hint": "Boost your performance.",
+          "effects": {
+            "metricDeltas": {"Academics": 8, "Health": -15, "Stress": 10, "Reputation": 2}
+          }
+        },
+        {
+          "id": "study-together",
+          "label": "Propose a study group instead",
+          "hint": "Support each other properly.",
+          "effects": {
+            "metricDeltas": {"Academics": 10, "Relationships": 8, "SupportNetwork": 7}
+          }
+        },
+        {
+          "id": "trust-preparation",
+          "label": "Trust your preparation",
+          "hint": "You've got this.",
+          "effects": {
+            "metricDeltas": {"Academics": 5, "MentalWellbeing": 8, "Stress": -5}
+          }
+        },
+        {
+          "id": "report-concern",
+          "label": "Report your concern to a teacher",
+          "hint": "Protect your peers.",
+          "effects": {
+            "metricDeltas": {"RiskAwareness": 10, "Reputation": -2, "SupportNetwork": 4}
+          }
+        }
+      ]
+    },
+    {
+      "id": "weekend-plans",
+      "title": "Weekend Plans",
+      "narrative": "Friends invite you to a party where you know there will be substances. You're feeling lonely.",
+      "tags": ["loneliness", "party_invitation"],
+      "triggers": {"metricLte": {"Relationships": 50}},
+      "sensitive": true,
+      "choices": [
+        {
+          "id": "attend-party",
+          "label": "Attend the party",
+          "hint": "Social connection matters.",
+          "effects": {
+            "metricDeltas": {"Relationships": 5, "Health": -10, "RiskAwareness": -5}
+          }
+        },
+        {
+          "id": "decline-gracefully",
+          "label": "Decline gracefully",
+          "hint": "Set healthy boundaries.",
+          "effects": {
+            "metricDeltas": {"Relationships": -2, "Health": 5, "RiskAwareness": 6}
+          }
+        },
+        {
+          "id": "suggest-alt-activity",
+          "label": "Suggest another activity",
+          "hint": "Create better memories.",
+          "effects": {
+            "metricDeltas": {"Relationships": 8, "Health": 6, "MentalWellbeing": 5}
+          }
+        },
+        {
+          "id": "reach-out-counselor",
+          "label": "Text the school counselor",
+          "hint": "Professional support helps.",
+          "effects": {
+            "metricDeltas": {"SupportNetwork": 10, "MentalWellbeing": 8, "Relationships": -1}
+          }
+        }
+      ]
+    },
+    {
+      "id": "walking-away",
+      "title": "Walking Away",
+      "narrative": "You notice a classmate struggling with pressure to try something. They look uncomfortable.",
+      "tags": ["witnessing_pressure", "opportunity_to_help"],
+      "triggers": {"requireTags": ["protective_action"], "metricGte": {"SupportNetwork": 50}},
+      "choices": [
+        {
+          "id": "intervene-kindly",
+          "label": "Intervene and support them",
+          "hint": "Be an ally.",
+          "effects": {
+            "metricDeltas": {"Relationships": 10, "SupportNetwork": 8, "MentalWellbeing": 5},
+            "addTags": ["helper", "leader"],
+            "achievement": "Protective Peer"
+          }
+        },
+        {
+          "id": "create-distraction",
+          "label": "Create a distraction",
+          "hint": "Smart strategy.",
+          "effects": {
+            "metricDeltas": {"Relationships": 7, "SupportNetwork": 6, "RiskAwareness": 5}
+          }
+        },
+        {
+          "id": "get-adult",
+          "label": "Get a trusted adult",
+          "hint": "Scale of concern matters.",
+          "effects": {
+            "metricDeltas": {"SupportNetwork": 6, "RiskAwareness": 8, "Relationships": -1}
+          }
+        },
+        {
+          "id": "stay-out",
+          "label": "Stay out of it",
+          "hint": "Not your problem.",
+          "effects": {
+            "metricDeltas": {"Relationships": -3, "RiskAwareness": -2}
+          }
+        }
+      ]
+    }
+  ],
+  "preQuiz": [
+    {
+      "id": "q1",
+      "text": "How confident are you in refusing a substance if offered by a friend?",
+      "options": [
+        { "id": "a1", "text": "Not confident at all" },
+        { "id": "a2", "text": "A little confident" },
+        { "id": "a3", "text": "Somewhat confident" },
+        { "id": "a4", "text": "Very confident" }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "How likely do you think you are to try a substance in the next year?",
+      "options": [
+        { "id": "a1", "text": "Very unlikely" },
+        { "id": "a2", "text": "Unlikely" },
+        { "id": "a3", "text": "Likely" },
+        { "id": "a4", "text": "Very likely" }
+      ]
+    }
+  ],
+  "postQuiz": [
+    {
+      "id": "q1",
+      "text": "After playing, how confident are you now in refusing a substance?",
+      "options": [
+        { "id": "a1", "text": "Not confident at all" },
+        { "id": "a2", "text": "A little confident" },
+        { "id": "a3", "text": "Somewhat confident" },
+        { "id": "a4", "text": "Very confident" }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "Which of these is a helpful strategy when feeling pressured?",
+      "options": [
+        { "id": "a1", "text": "Ignoring the feeling" },
+        { "id": "a2", "text": "Talking to a trusted adult" },
+        { "id": "a3", "text": "Keeping it to yourself" },
+        { "id": "a4", "text": "Agreeing to fit in" }
+      ],
+      "correct": "a2"
+    }
+  ]
+}
