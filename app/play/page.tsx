@@ -95,11 +95,16 @@ function PlayContent() {
     if (nextState.step >= MAX_STEPS) {
       setGameEnded(true);
       setTimeout(async () => {
-        const session = await getSession(sessionId!);
-        if (session) {
-          await saveSession({ ...session, finishedAt: Date.now(), metrics: nextState.metrics as any } as any);
+        try {
+          const s = await getSession(sessionId!);
+          if (s) {
+            await saveSession({ ...s, finishedAt: Date.now(), metrics: nextState.metrics as any } as any);
+          }
+        } catch (e) {
+          console.error('end-save failed', e);
+        } finally {
+          router.push(`/outcome?session=${sessionId}`);
         }
-        router.push(`/outcome?session=${sessionId}`);
       }, 1200);
     } else {
       const nextEvent = selectNextEvent(content!, nextState, { avoidRepeats: true });
@@ -111,11 +116,16 @@ function PlayContent() {
     if (!event) {
       setGameEnded(true);
       setTimeout(async () => {
-        const session = await getSession(sessionId!);
-        if (session) {
-          await saveSession({ ...session, finishedAt: Date.now(), metrics: engine!.metrics as any } as any);
+        try {
+          const s = await getSession(sessionId!);
+          if (s) {
+            await saveSession({ ...s, finishedAt: Date.now(), metrics: engine!.metrics as any } as any);
+          }
+        } catch (e) {
+          console.error('finalize-save failed', e);
+        } finally {
+          router.push(`/outcome?session=${sessionId}`);
         }
-        router.push(`/outcome?session=${sessionId}`);
       }, 1200);
       return;
     }
