@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { loadDefaultContent } from '@/lib/content/loadContent';
 import type { ContentPack, QuizQuestion } from '@/lib/types/game';
 import { getSession, saveSession } from '@/lib/db/indexedDb';
@@ -20,6 +21,9 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
+  // Achievements during quiz
+  const [achievement, setAchievement] = useState<null | { title: string; subtitle: string; badge: string }>(null);
+
   useEffect(() => {
     async function loadContentAsync() {
       const gameContent = await loadDefaultContent();
@@ -31,15 +35,30 @@ export default function QuizPage() {
     loadContentAsync();
   }, [quizType]);
 
+  const triggerAchievement = (title: string, subtitle: string) => {
+    const badges = ['/badges/badge2.png', '/badges/badge3.png'];
+    const badge = badges[Math.floor(Math.random() * badges.length)];
+    setAchievement({ title, subtitle, badge });
+    setTimeout(() => setAchievement(null), 1400);
+  };
+
   const handleAnswer = (questionId: string, optionId: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: optionId }));
+
+    // Mid-quiz achievements (simple, client-only)
+    if (currentQuestionIndex === 0) {
+      triggerAchievement('First Step!', 'You started the check‑in.');
+    } else if (optionId.toLowerCase().endsWith('a4')) {
+      triggerAchievement('Confidence +1', 'A strong, clear choice.');
+    }
+
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       } else {
         finishQuiz();
       }
-    }, 200);
+    }, 250);
   };
 
   const finishQuiz = async () => {
@@ -77,6 +96,26 @@ export default function QuizPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
+      {/* Achievement toast */}
+      <AnimatePresence>
+        {achievement && (
+          <motion.div
+            initial={{ opacity: 0, y: -30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -30, scale: 0.95 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
+          >
+            <div className="ui-card-solid px-5 py-3 flex items-center gap-3">
+              <Image src={achievement.badge} alt="badge" width={48} height={48} />
+              <div>
+                <div className="font-bold">{achievement.title}</div>
+                <div className="text-sm text-[color:var(--muted)]">{achievement.subtitle}</div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="w-full max-w-2xl">
         <AnimatePresence mode="wait">
           <motion.div
