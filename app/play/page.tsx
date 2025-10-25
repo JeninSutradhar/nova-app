@@ -21,10 +21,12 @@ function PlayContent() {
   const [currentEvent, setCurrentEvent] = useState<any>(null);
   const [engine, setEngine] = useState<EngineState | null>(null);
   const [profile, setProfile] = useState<{ name?: string; ageBand?: '13-14' | '15-16' | '17-18'; avatar?: string } | null>(null);
-  const [achievements, setAchievements] = useState<string[]>([]);
-  const [showAchievement, setShowAchievement] = useState<string | null>(null);
   const [showWarning, setShowWarning] = useState<any>(null);
   const [gameEnded, setGameEnded] = useState(false);
+
+  // Badge toast state
+  const [badgeToast, setBadgeToast] = useState<null | { title: string; subtitle?: string; badge: string }>(null);
+
   const MAX_STEPS = 10;
 
   useEffect(() => {
@@ -66,25 +68,46 @@ function PlayContent() {
   const step = useMemo(() => engine?.step || 0, [engine]);
   const metrics = useMemo(() => engine?.metrics || {}, [engine]);
 
+  function triggerBadge(title: string, subtitle?: string) {
+    const badges = [
+      '/badges/badge1.png',
+      '/badges/badge2.png',
+      '/badges/badge3.png',
+      '/badges/badge4.png',
+      '/badges/badge5.png',
+      '/badges/badge6.png',
+    ];
+    const badge = badges[Math.floor(Math.random() * badges.length)];
+    setBadgeToast({ title, subtitle, badge });
+    setTimeout(() => setBadgeToast(null), 1400);
+  }
+
   async function handleChoose(choiceId: string) {
     if (!engine || !currentEvent) return;
 
     const { nextState, effects } = applyChoice(content!, engine, currentEvent.id, choiceId);
     setEngine(nextState);
-    
-    if (effects.achievement && !achievements.includes(effects.achievement)) {
-      const newAchievements = [...achievements, effects.achievement];
-      setAchievements(newAchievements);
-      setShowAchievement(effects.achievement);
-      setTimeout(() => setShowAchievement(null), 3000);
-    }
 
+    // Easy badge triggers
+    try {
+      const deltas = effects.decision?.metricDeltas || {};
+      const posSum = Object.values(deltas).reduce((sum: number, n: any) => (typeof n === 'number' && n > 0 ? sum + n : sum), 0);
+      if (effects.achievement) {
+        triggerBadge('Achievement Unlocked', effects.achievement);
+      } else if (posSum >= 6) {
+        triggerBadge('Great Choice!', 'Positive impact.');
+      } else if ((nextState.step % 3) === 0) {
+        triggerBadge('Milestone', `Step ${nextState.step}/${MAX_STEPS}`);
+      }
+    } catch {}
+
+    // Persist decision
     const session = await getSession(sessionId!);
     if (session) {
       const newDecisions = [...(session.decisions || []), effects.decision];
-      const updatedSession = { 
-        ...session, 
-        decisions: newDecisions, 
+      const updatedSession = {
+        ...session,
+        decisions: newDecisions,
         seenEventIds: Array.from(nextState.seenEventIds),
         achievements: Array.from(nextState.achievements),
         metrics: nextState.metrics as any,
@@ -92,6 +115,7 @@ function PlayContent() {
       await saveSession(updatedSession as any);
     }
 
+    // Flow control
     if (nextState.step >= MAX_STEPS) {
       setGameEnded(true);
       setTimeout(async () => {
@@ -136,7 +160,7 @@ function PlayContent() {
       setCurrentEvent(event);
     }
   };
-  
+
   const handleSkip = () => {
     const nextEvent = selectNextEvent(content!, engine!, { avoidRepeats: true });
     setShowWarning(null);
@@ -167,28 +191,37 @@ function PlayContent() {
 
   return (
     <div className="min-h-screen">
+      {/* Badge toast */}
+      <AnimatePresence>
+        {badgeToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -30, scale: 0.95 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
+          >
+            <div className="ui-card-solid px-5 py-3 flex items-center gap-3">
+              <Image src={badgeToast.badge} alt="badge" width={48} height={48} />
+              <div>
+                <div className="font-bold">{badgeToast.title}</div>
+                {badgeToast.subtitle ? (
+                  <div className="text-sm text-[color:var(--muted)]">{badgeToast.subtitle}</div>
+                ) : null}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {showWarning && (
-          <WarningModal 
+          <WarningModal
             onProceed={() => {
               setCurrentEvent(showWarning);
               setShowWarning(null);
-            }} 
+            }}
             onSkip={handleSkip}
           />
-        )}
-        {showAchievement && (
-          <motion.div
-            initial={{ opacity: 0, y: -50, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -50, scale: 0.8 }}
-            className="fixed top-8 left-1/2 -translate-x-1/2 z-50"
-          >
-            <div className="ui-card-solid px-8 py-4">
-              <div className="text-2xl">✨</div>
-              <div className="font-bold text-lg">{showAchievement}</div>
-            </div>
-          </motion.div>
         )}
       </AnimatePresence>
 
